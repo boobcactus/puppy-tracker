@@ -1,6 +1,6 @@
 module puppy-tracker
 
-go 1.21.0
+go 1.21
 
 require github.com/faiface/beep v1.1.0
 
