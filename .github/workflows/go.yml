@@ -20,6 +20,13 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.x'
+      - name: Install libasound2-dev
+        uses: actions/setup-apt@v2
+        with:
+          packages: libasound2-dev
+      - name: Set PKG_CONFIG_PATH
+        run: |
+          export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/local/lib/pkgconfig"
       - name: Install dependencies
         run: go get .
       - name: Build
