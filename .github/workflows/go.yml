@@ -21,9 +21,7 @@ jobs:
         with:
           go-version: '1.21.x'
       - name: Install libasound2-dev
-        uses: ubuntu-action/setup-apt@v2
-        with:
-          package-list: libasound2-dev
+        run: sudo apt-get install -y libasound2-dev
       - name: Set PKG_CONFIG_PATH
         run: |
           export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/local/lib/pkgconfig"
