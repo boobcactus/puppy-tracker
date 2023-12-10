@@ -81,11 +81,11 @@ func playSound() {
 		log.Fatal(err)
 	}
 
-	streamer, format, err := mp3.Decode(buffer)
+	streamer, format, err := mp3.Decode(io.NopCloser(buffer))
 	if err != nil {
 		log.Fatal(err)
 	}
-	// defer streamer.Close()
+	// defer streamer.Close() -- this causes the function to only run once and then error. had to be removed for continuous operation
 
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
