@@ -19,7 +19,7 @@ const (
 	apiURL        = "https://puppy-price.vercel.app/api/get-price"
 	checkInterval = 60 * time.Second
 	checkPeriod   = 5 * time.Minute
-	threshold     = 0.00005
+	threshold     = 0.05 // 5% price change +/- threshold for woof
 )
 
 //go:embed jacobruff.mp3
