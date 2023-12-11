@@ -8,17 +8,20 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
+	"github.com/guptarohit/asciigraph"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 const (
 	apiURL        = "https://puppy-price.vercel.app/api/get-price"
-	checkInterval = 60 * time.Second
-	checkPeriod   = 2 * time.Minute
+	checkInterval = 10 * time.Second
+	checkPeriod   = 1 * time.Minute
 	threshold     = 0.025 // 2.5% price change +/- threshold for woof
 )
 
@@ -27,6 +30,7 @@ var audioData []byte
 
 func main() {
 	var prevPrice float64
+	var prices []float64
 
 	for {
 		// Fetch the price from the API endpoint
@@ -36,8 +40,8 @@ func main() {
 			continue
 		}
 
-		// Print the price
-		fmt.Println("Price:", price)
+		// Add the price to the prices slice
+		prices = append(prices, price)
 
 		// Check if the price has changed by more than 2% in the last 5 minutes
 		if prevPrice != 0 && (price-prevPrice)/prevPrice > threshold {
@@ -46,6 +50,20 @@ func main() {
 		}
 
 		prevPrice = price
+
+		// Get the current height and width of the terminal
+		width, height, err := terminal.GetSize(int(os.Stdout.Fd()))
+		if err != nil {
+			log.Println("Error getting terminal size:", err)
+			continue
+		}
+
+		// Plot the prices with a precision of 6 decimal places
+		graph := asciigraph.Plot(prices, asciigraph.Height(height-3), asciigraph.Width(width-10), asciigraph.Precision(6))
+		fmt.Println(graph)
+
+		// Print the price
+		fmt.Println("Price:", price)
 
 		time.Sleep(checkInterval)
 	}
